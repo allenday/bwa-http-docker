@@ -13,9 +13,6 @@ RUN mkdir -p /data
 
 RUN rm -rf /var/lib/apt/lists/*
 
-COPY hello.cgi /usr/lib/cgi-bin/hello.cgi
-RUN chmod +x /usr/lib/cgi-bin/hello.cgi
-
 COPY bwa.cgi /usr/lib/cgi-bin/bwa.cgi
 RUN chmod +x /usr/lib/cgi-bin/bwa.cgi
 
