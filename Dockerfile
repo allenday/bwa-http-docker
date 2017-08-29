@@ -3,7 +3,7 @@ MAINTAINER Allen Day "allenday@allenday.com"
 
 EXPOSE 80
 
-ENV IMAGE_PACKAGES="apache2 bwa gzip tar wget"
+ENV IMAGE_PACKAGES="apache2 bwa gzip kalign tar wget"
 
 RUN apt-get -y update
 RUN apt-get -y --no-install-recommends install $IMAGE_PACKAGES
@@ -15,6 +15,9 @@ RUN rm -rf /var/lib/apt/lists/*
 
 COPY bwa.cgi /usr/lib/cgi-bin/bwa.cgi
 RUN chmod +x /usr/lib/cgi-bin/bwa.cgi
+
+COPY kalign.cgi /usr/lib/cgi-bin/kalign.cgi
+RUN chmod +x /usr/lib/cgi-bin/kalign.cgi
 
 COPY entrypoint.sh /entrypoint.sh
 
