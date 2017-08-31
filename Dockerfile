@@ -13,6 +13,8 @@ RUN mkdir -p /data
 
 RUN rm -rf /var/lib/apt/lists/*
 
+COPY apache2.conf /etc/apache2/sites-available/000-default.conf
+
 COPY bwa.cgi /usr/lib/cgi-bin/bwa.cgi
 RUN chmod +x /usr/lib/cgi-bin/bwa.cgi
 
