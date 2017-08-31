@@ -13,12 +13,19 @@ if ( ! $fastq_fh || ! $database ) {
   exit(0);
 }
 
+my $bytes = 0;
+my $head = "";
 my (undef, $tempfile) = File::Temp::tempfile();
 open( F, ">$tempfile.fq" );
 while ( my $line = <$fastq_fh> ) {
+  $head ||= $line;
+  $bytes += length($line);
   print F $line;
 }
 close( F );
+
+chomp $head;
+print STDERR "fastq_bytes=$bytes\nhead=$head\n";
 
 system( "bwa mem /data/$database $tempfile.fq > $tempfile.sam" );
 open( B, "$tempfile.sam" );
