@@ -24,14 +24,16 @@ while ( my $line = <$fastq_fh> ) {
 }
 close( F );
 
-chomp $head;
-print STDERR "fastq_bytes=$bytes\nhead=$head\n";
+print STDERR "fastq_bytes=$bytes\nhead=$head";
 
 system( "bwa mem /data/$database $tempfile.fq > $tempfile.sam" );
 open( B, "$tempfile.sam" );
 print CGI::header('text/plain');
 while ( my $line = <B> ) {
   print $line;
+  if ( $line !~ m/^[@#]/ ) {
+    print STDERR "hit=$line";
+  }
 }
 
 unlink "$tempfile.fq";
