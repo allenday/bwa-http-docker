@@ -5,19 +5,32 @@ use File::Temp qw();
 
 $CGI::POST_MAX = 50 * 1024 * 1024; #50MB
 
-my $fasta_fh = CGI::param('fasta');
+my $input_fh = CGI::param('fasta');
 
-if ( ! $fasta_fh ) {
+if ( ! $input_fh ) {
   print CGI::header(-status=>400);
   exit(0);
 }
 
+my $bytes = 0;
+my $head = undef;
 my (undef, $tempfile) = File::Temp::tempfile();
 open( F, ">$tempfile.fa" );
-while ( my $line = <$fasta_fh> ) {
-  print F $line;
+
+if ( defined(fileno($input_fh)) ) {
+  while ( my $line = <$input_fh> ) {
+    $head ||= $line;
+    $bytes += length($line);
+    print F $line;
+  }
+}
+else {
+  $bytes += length($input_fh);
+  print F $input_fh;
 }
 close( F );
+
+print STDERR "input_bytes=$bytes\nhead=$head";
 
 system( "kalign kalign -gpo 60 -gpe 10 -tgpe 0 -bonus 0 -q -i $tempfile.fa -o $tempfile.out" );
 open( B, "$tempfile.out" );
