@@ -8,6 +8,9 @@ $CGI::POST_MAX = 50 * 1024 * 1024; #50MB
 my $fastq_fh = CGI::param('fastq');
 my $database = CGI::param('database');
 
+warn fileno($fastq_fh);
+warn $fastq_fh;
+
 if ( ! $fastq_fh || ! $database ) {
   print CGI::header(-status=>400);
   exit(0);
@@ -17,10 +20,17 @@ my $bytes = 0;
 my $head = "";
 my (undef, $tempfile) = File::Temp::tempfile();
 open( F, ">$tempfile.fq" );
-while ( my $line = <$fastq_fh> ) {
-  $head ||= $line;
-  $bytes += length($line);
-  print F $line;
+
+if ( defined(fileno($fastq_fh)) ) {
+  while ( my $line = <$fastq_fh> ) {
+    $head ||= $line;
+    $bytes += length($line);
+    print F $line;
+  }
+}
+else {
+  $bytes += length($fastq_fh);
+  print F $fastq_fh;
 }
 close( F );
 
