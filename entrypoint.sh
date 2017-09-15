@@ -1,5 +1,10 @@
 #!/bin/bash
 
+openssl genrsa -des3 -passout pass:x -out /etc/apache2/ssl/pass.key 2048
+openssl rsa -passin pass:x -in /etc/apache2/ssl/pass.key -out /etc/apache2/ssl/server.key
+cat /tmp/ssl-info.txt | openssl req -new -key /etc/apache2/ssl/server.key -out /etc/apache2/ssl/server.csr
+openssl x509 -req -days 365 -in /etc/apache2/ssl/server.csr -signkey /etc/apache2/ssl/server.key -out /etc/apache2/ssl/server.crt
+
 if [[ -z $BWA_FILES ]]; then
   echo "\$BWA_FILES not set"
 else
