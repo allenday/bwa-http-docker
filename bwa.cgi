@@ -7,6 +7,7 @@ $CGI::POST_MAX = 50 * 1024 * 1024; #50MB
 
 my $input_fh = CGI::param('fastq');
 my $database = CGI::param('database');
+my $args     = CGI::param('args') || '';
 
 if ( ! $input_fh || ! $database ) {
   print CGI::header(-status=>400);
@@ -33,7 +34,7 @@ close( F );
 
 print STDERR "input_bytes=$bytes\nhead=$head";
 
-system( "bwa mem /data/$database $tempfile.fq > $tempfile.out" );
+system( "bwa mem $args /data/$database $tempfile.fq > $tempfile.out" );
 open( B, "$tempfile.out" );
 print CGI::header('text/plain');
 while ( my $line = <B> ) {
