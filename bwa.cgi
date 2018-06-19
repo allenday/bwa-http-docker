@@ -14,6 +14,8 @@ if ( !$input_fh || !$database ) {
   #load balancer request, ok
   if ( -f "/data/ok" ) {
     print CGI::header(-status=>200);
+    print CGI::header('text/plain');
+    print "OK\n";
     exit(0);
   }
   #regular request, user error
