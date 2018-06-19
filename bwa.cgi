@@ -9,7 +9,7 @@ my $input_fh = CGI::param('fastq');
 my $database = CGI::param('database');
 my $args     = CGI::param('args') || '';
 
-if ( ! $input_fh || ! $database ) {
+if ( ! $input_fh || ! $database || ! -f "/data/ok" ) {
   print CGI::header(-status=>400);
   exit(0);
 }
