@@ -9,9 +9,18 @@ my $input_fh = CGI::param('fastq');
 my $database = CGI::param('database');
 my $args     = CGI::param('args') || '';
 
-if ( ! $input_fh || ! $database || ! -f "/data/ok" ) {
-  print CGI::header(-status=>400);
-  exit(0);
+#no args
+if ( !$input_fh || !$database ) {
+  #load balancer request, ok
+  if ( -f "/data/ok" ) {
+    print CGI::header(-status=>200);
+    exit(0);
+  }
+  #regular request, user error
+  else {
+    print CGI::header(-status=>400);
+    exit(0);
+  }
 }
 
 my $bytes = 0;
