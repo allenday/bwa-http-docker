@@ -3,10 +3,15 @@ LABEL maintainer="Allen Day <allenday@allenday.com>"
 
 EXPOSE 80
 
-ENV IMAGE_PACKAGES="apache2 bwa gzip kalign tar wget"
+ENV IMAGE_PACKAGES="apache2 bwa gzip kalign tar wget build-essential"
 
 RUN apt-get -y update
 RUN apt-get -y --no-install-recommends install $IMAGE_PACKAGES
+
+# install Perl CGI module, it's not included into the standard distribution anymore
+RUN curl -L https://cpanmin.us | perl - App::cpanminus
+RUN cpanm install CGI
+
 RUN a2enmod cgi
 
 COPY fqdn.conf /etc/apache2/conf-available/fqdn.conf
