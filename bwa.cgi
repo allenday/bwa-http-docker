@@ -45,7 +45,8 @@ close( F );
 
 print STDERR "input_bytes=$bytes\nhead=$head";
 
-system( "bwa mem $args /data/$database $tempfile.fq > $tempfile.out" );
+system( "bwa mem $args /data/$database $tempfile.fq > $tempfile.out" ) == 0
+        or die "'bwa mem' exited with non zero code";
 open( B, "$tempfile.out" );
 print CGI::header('text/plain');
 while ( my $line = <B> ) {
